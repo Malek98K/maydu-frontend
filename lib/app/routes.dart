@@ -13,6 +13,8 @@ import '../features/transactions/presentation/pages/transaction_list/transaction
 import '../features/budgets/presentation/pages/budget_overview/budget_overview_page.dart';
 import '../features/profile/presentation/pages/profile_settings/profile_settings_page.dart';
 
+const bool kBypassAuthForPreview = true;
+
 // Helper class to convert Stream to Listenable for GoRouter
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
@@ -96,6 +98,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
     // Redirect logic
     redirect: (context, state) {
+      if (kBypassAuthForPreview) {
+        return null;
+      }
+
       final user = authRepo.currentUser;
       final isLoggedIn = user != null;
       final isLoggingIn = state.uri.toString() == '/login' ||
