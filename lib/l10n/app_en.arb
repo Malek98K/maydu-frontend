@@ -1,0 +1,52 @@
+{
+  "@@locale": "en",
+  "appTitle": "Student Finance Guardian",
+  "loginTitle": "Login",
+  "loginEmailLabel": "Email",
+  "loginPasswordLabel": "Password",
+  "loginSignInButton": "Sign In",
+  "loginWithGoogle": "Sign In with Google",
+  "loginWithApple": "Sign In with Apple",
+  "loginWithOtp": "Login with OTP",
+  "loginForgotPassword": "Forgot Password?",
+  "otpTitle": "OTP Verification",
+  "otpEmailLabel": "Email Address",
+  "otpSendButton": "Send OTP",
+  "otpCodeLabel": "OTP Code",
+  "otpVerifyButton": "Verify OTP",
+  "forgotPasswordTitle": "Reset Password",
+  "forgotPasswordEmailLabel": "Email",
+  "forgotPasswordSendButton": "Send Reset Link",
+  "dashboardTitle": "Dashboard",
+  "dashboardTotalBalance": "Total Balance",
+  "dashboardRecentActivity": "Recent Activity",
+  "dashboardNoActivity": "No recent transactions.",
+  "transactionsTitle": "Transactions",
+  "transactionsHistory": "Transaction History",
+  "transactionsNoTransactions": "No transactions found.",
+  "transactionsAddTooltip": "Add Transaction",
+  "budgetsTitle": "Budgets",
+  "budgetsNoBudgets": "No active budgets.",
+  "budgetsCategory": "Category",
+  "budgetsSpent": "{amount} spent",
+  "@budgetsSpent": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "budgetsLeft": "{amount} left",
+  "@budgetsLeft": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "profileTitle": "Profile & Security",
+  "profileSecuritySettings": "Security Settings",
+  "profileSecuritySubtitle": "Manage MFA and devices",
+  "profileLogout": "Logout",
+  "errorGeneric": "An error occurred. Please try again later.",
+  "navDashboard": "Dashboard",
+  "navTransactions": "Transactions",
+  "navBudgets": "Budgets",
+  "navProfile": "Profile"
+}
