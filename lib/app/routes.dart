@@ -6,6 +6,7 @@ import '../features/auth/data/auth_repository.dart';
 import '../features/auth/presentation/pages/login/login_page.dart';
 import '../features/auth/presentation/pages/otp/otp_page.dart';
 import '../features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
+import '../features/auth/presentation/pages/signup/signup_page.dart';
 import '../features/main_shell/presentation/pages/main_shell_page.dart';
 import '../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../features/transactions/presentation/pages/transaction_list/transaction_list_page.dart';
@@ -43,6 +44,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordPage(),
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignupPage(),
       ),
       // Stateful shell route for bottom navigation
       StatefulShellRoute.indexedStack(
@@ -95,7 +100,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = user != null;
       final isLoggingIn = state.uri.toString() == '/login' ||
                           state.uri.toString() == '/otp-login' ||
-                          state.uri.toString() == '/forgot-password';
+                          state.uri.toString() == '/forgot-password' ||
+                          state.uri.toString() == '/signup';
 
       // If the user is NOT logged in and trying to access a secure page, redirect to login
       if (!isLoggedIn && !isLoggingIn) return '/login';

@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'login_controller.dart';
-import 'components/login_form.dart';
-import 'components/oauth_buttons.dart';
+import 'signup_controller.dart';
+import 'components/signup_form.dart';
 
-class LoginPage extends ConsumerWidget {
-  const LoginPage({super.key});
+class SignupPage extends ConsumerWidget {
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Listen for error states
     ref.listen<AsyncValue>(
-      loginControllerProvider,
+      signupControllerProvider,
       (_, state) {
         if (state.hasError && !state.isLoading) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error.toString()),
               backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
+
+        if (!state.isLoading && !state.hasError && state.hasValue) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account created. Please verify your email if prompted.'),
             ),
           );
         }
@@ -37,13 +43,13 @@ class LoginPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Icon(
-                    Icons.shield_outlined,
+                    Icons.person_add_alt_1,
                     size: 64,
                     color: Color(0xFF1E3A8A),
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Welcome Back',
+                    'Create Account',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF1E3A8A),
@@ -52,45 +58,25 @@ class LoginPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Securely manage your student finances.',
+                    'Start securely managing your student finances.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),
-                  
-                  const LoginForm(),
-                  
+                  const SignupForm(),
                   const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: Colors.grey[300])),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'OR',
-                          style: TextStyle(color: Colors.grey[500]),
-                        ),
-                      ),
-                      Expanded(child: Divider(color: Colors.grey[300])),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  const OAuthButtons(),
-
-                  const SizedBox(height: 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Don\'t have an account?',
+                        'Already have an account?',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       TextButton(
-                        onPressed: () => context.push('/signup'),
-                        child: const Text('Sign Up'),
+                        onPressed: () => context.go('/login'),
+                        child: const Text('Sign In'),
                       ),
                     ],
                   ),

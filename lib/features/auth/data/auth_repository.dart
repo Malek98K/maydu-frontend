@@ -21,6 +21,11 @@ class AuthRepository {
     return await _client.auth.signInWithPassword(email: email, password: password);
   }
 
+  /// Sign up with Email and Password
+  Future<AuthResponse> signUpWithEmailPassword(String email, String password) async {
+    return await _client.auth.signUp(email: email, password: password);
+  }
+
   /// Send an OTP to the user's email
   Future<void> signInWithOtp(String email) async {
     await _client.auth.signInWithOtp(email: email);

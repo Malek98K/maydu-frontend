@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:student_finance_guardian/l10n/generated/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'forgot_password_controller.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
@@ -23,51 +23,130 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(forgotPasswordControllerProvider);
-    final l10n = AppLocalizations.of(context)!;
-    final isLoading = state is AsyncLoading;
+    final isLoading = state.isLoading;
     final isSent = state.value ?? false;
 
+    ref.listen<AsyncValue<bool>>(
+      forgotPasswordControllerProvider,
+      (_, next) {
+        if (next.hasError && !next.isLoading) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(next.error.toString()),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
+      },
+    );
+
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.forgotPasswordTitle)),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: isSent
-              ? const Center(
-                  child: Text('Reset link sent! Check your email.'),
-                )
-              : Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (state is AsyncError) ...[
-                        Text(
-                          l10n.errorGeneric,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(labelText: l10n.forgotPasswordEmailLabel),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) => value!.isEmpty ? 'Required' : null,
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: isLoading
-                            ? null
-                            : () {
-                                if (_formKey.currentState!.validate()) {
-                                  ref.read(forgotPasswordControllerProvider.notifier).sendResetLink(_emailController.text.trim());
-                                }
-                              },
-                        child: isLoading ? const CircularProgressIndicator() : Text(l10n.forgotPasswordSendButton),
-                      ),
-                    ],
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Icon(
+                    Icons.lock_reset,
+                    size: 64,
+                    color: Color(0xFF1E3A8A),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Forgot Password',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF1E3A8A),
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Enter your email and we\'ll send you a secure reset link.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 40),
+                  if (isSent)
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 24),
+                      child: Text(
+                        'Reset link sent! Check your email.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Email Address',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(12)),
+                            ),
+                            prefixIcon: Icon(Icons.email_outlined),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'Enter your email';
+                            if (!value.contains('@')) return 'Enter a valid email';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    ref
+                                        .read(forgotPasswordControllerProvider.notifier)
+                                        .sendResetLink(_emailController.text.trim());
+                                  }
+                                },
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Send Reset Link',
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextButton(
+                    onPressed: () => context.go('/login'),
+                    child: const Text('Back to Sign In'),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
